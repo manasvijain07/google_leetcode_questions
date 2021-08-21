@@ -1,0 +1,64 @@
+1423. Maximum Points You Can Obtain from Cards -
+
+There are several cards arranged in a row, and each card has an associated number of points. The points are given in the integer array cardPoints.
+
+In one step, you can take one card from the beginning or from the end of the row. You have to take exactly k cards.
+
+Your score is the sum of the points of the cards you have taken.
+
+Given the integer array cardPoints and the integer k, return the maximum score you can obtain.
+
+ 
+
+Example 1:
+
+Input: cardPoints = [1,2,3,4,5,6,1], k = 3
+Output: 12
+Explanation: After the first step, your score will always be 1. However, choosing the rightmost card first will maximize your total score. The optimal strategy is to take the three cards on the right, giving a final score of 1 + 6 + 5 = 12.
+Example 2:
+
+Input: cardPoints = [2,2,2], k = 2
+Output: 4
+Explanation: Regardless of which two cards you take, your score will always be 4.
+
+-------------------Solution ----------------
+class Solution {
+    public int maxScore(int[] cardPoints, int k) {
+        int total_sum = 0;
+        
+        for(int i: cardPoints)
+        {
+            total_sum += i;
+        }
+        
+        int n = cardPoints.length;
+        
+        if(n == k)
+        {
+            return total_sum;
+        }
+        
+        // we will make a window f size = n - k - 1
+        int window_sum = 0, result = 0;
+        
+        for(int i = 0; i < n - k; i++)
+        {
+            window_sum += cardPoints[i];
+        }
+        
+        int start_index = 0;
+        for(int i = n - k; i < n; i++)
+        {
+            result = Math.max(result, total_sum - window_sum);
+            window_sum += cardPoints[i];
+            window_sum -= cardPoints[start_index++];
+        }
+        result = Math.max(result, total_sum - window_sum);
+        return result;
+        
+    }
+}
+
+//https://www.youtube.com/watch?v=U0utLw_vWGM
+// TC - O(n)    where n - length of cardPOints
+// SC - O(1)
